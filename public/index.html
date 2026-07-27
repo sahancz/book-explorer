@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Book Explorer</title>
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+  >
+
+  <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <nav class="teal">
+    <div class="nav-wrapper container">
+      <a href="#" class="brand-logo">
+        <i class="material-icons">menu_book</i>
+        Book Explorer
+      </a>
+    </div>
+  </nav>
+
+  <header class="hero center-align">
+    <div class="container">
+      <h1>Discover Classic Books</h1>
+      <p>Explore a selection of memorable public-domain literature.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <h4 class="section-title">Featured Books</h4>
+
+    <div id="loading" class="center-align">
+      <div class="preloader-wrapper active">
+        <div class="spinner-layer spinner-teal-only">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
+
+      <p>Loading books...</p>
+    </div>
+
+    <div id="book-list" class="row"></div>
+  </main>
+
+  <footer class="page-footer teal">
+    <div class="footer-copyright">
+      <div class="container center-align">
+        Book Explorer — SIT725 Task 3.2P
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="scripts.js"></script>
+</body>
+</html>
