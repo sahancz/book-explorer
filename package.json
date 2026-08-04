@@ -4,6 +4,7 @@
   "description": "A Materialize and Express application for exploring classic books",
   "main": "server.js",
   "scripts": {
+    "db:check": "node scripts/verify-database.js",
     "start": "node server.js"
   },
   "keywords": [
@@ -11,9 +12,10 @@
     "materialize",
     "books"
   ],
-  "author": "Your Name",
+  "author": "Sahan",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.22.2"
+    "express": "^4.22.2",
+    "mongoose": "^8.24.2"
   }
 }
