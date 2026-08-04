@@ -1,14 +1,28 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const path = require("path");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+const MONGODB_URI =
+  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/bookExplorerDB";
 
 app.use(express.static(path.join(__dirname, "public")));
 
-const books = [
+const bookSchema = new mongoose.Schema(
   {
-    id: 1,
+    title: { type: String, required: true, trim: true },
+    author: { type: String, required: true, trim: true },
+    description: { type: String, required: true, trim: true },
+    image: { type: String, required: true, trim: true },
+  },
+  { versionKey: false }
+);
+
+const Book = mongoose.model("Book", bookSchema);
+
+const seedBooks = [
+  {
     title: "Pride and Prejudice",
     author: "Jane Austen",
     description:
@@ -16,7 +30,6 @@ const books = [
     image: "https://covers.openlibrary.org/b/isbn/9780141439518-L.jpg",
   },
   {
-    id: 2,
     title: "Frankenstein",
     author: "Mary Shelley",
     description:
@@ -24,15 +37,13 @@ const books = [
     image: "https://covers.openlibrary.org/b/isbn/9780141439471-L.jpg",
   },
   {
-    id: 3,
     title: "The Adventures of Sherlock Holmes",
     author: "Arthur Conan Doyle",
     description:
       "Sherlock Holmes and Dr Watson investigate a collection of mysterious cases.",
-    image: "https://covers.openlibrary.org/b/isbn/9780199536955-L.jpg",
+    image: "https://covers.openlibrary.org/b/id/12376923-L.jpg",
   },
   {
-    id: 4,
     title: "The Picture of Dorian Gray",
     author: "Oscar Wilde",
     description:
@@ -40,7 +51,6 @@ const books = [
     image: "https://covers.openlibrary.org/b/isbn/9780141439570-L.jpg",
   },
   {
-    id: 5,
     title: "Dracula",
     author: "Bram Stoker",
     description:
@@ -48,7 +58,6 @@ const books = [
     image: "https://covers.openlibrary.org/b/isbn/9780141439846-L.jpg",
   },
   {
-    id: 6,
     title: "Alice's Adventures in Wonderland",
     author: "Lewis Carroll",
     description:
@@ -57,14 +66,46 @@ const books = [
   },
 ];
 
-app.get("/api/books", (request, response) => {
-  response.json({
-    statusCode: 200,
-    data: books,
-    message: "Books retrieved successfully",
-  });
+async function seedDatabase() {
+  const bookCount = await Book.countDocuments();
+
+  if (bookCount === 0) {
+    await Book.insertMany(seedBooks);
+    console.log(`Inserted ${seedBooks.length} sample books into MongoDB`);
+  }
+}
+
+app.get("/api/books", async (request, response) => {
+  try {
+    const books = await Book.find().sort({ _id: 1 }).lean();
+
+    response.json({
+      statusCode: 200,
+      data: books,
+      message: "Books retrieved successfully from MongoDB",
+    });
+  } catch (error) {
+    console.error("Unable to retrieve books:", error);
+    response.status(500).json({
+      statusCode: 500,
+      data: [],
+      message: "Unable to retrieve books from MongoDB",
+    });
+  }
 });
 
-app.listen(PORT, () => {
-  console.log(`Book Explorer is running at http://localhost:${PORT}`);
+async function startServer() {
+  await mongoose.connect(MONGODB_URI);
+  console.log("Connected to MongoDB");
+
+  await seedDatabase();
+
+  app.listen(PORT, () => {
+    console.log(`Book Explorer is running at http://localhost:${PORT}`);
+  });
+}
+
+startServer().catch((error) => {
+  console.error("Unable to start Book Explorer:", error);
+  process.exitCode = 1;
 });

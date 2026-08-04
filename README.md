@@ -1,57 +1,53 @@
-# Book Explorer
+# Book Explorer - SIT725 Task 4.2P
 
-Book Explorer is a simple web application created for SIT725 Task 3.2P. It uses an Express server, a Materialize interface, and a REST API to display a collection of classic books.
+Book Explorer is an Express and MongoDB application that displays classic books loaded through a REST API. The browser requests `GET /api/books`, and the server retrieves the book documents from MongoDB with Mongoose.
 
 ## Technologies Used
 
 - Node.js
 - Express
+- MongoDB and Mongoose
 - Materialize CSS
-- HTML
-- CSS
-- JavaScript
+- HTML, CSS, and JavaScript
 
-## How to Run the Application
+## Requirements
 
-Clone the repository:
+- Node.js 16.20.1 or newer
+- MongoDB Community Server running on `127.0.0.1:27017`
+
+## Run Locally
+
+Clone the repository and open the project folder:
 
 ```bash
 git clone https://github.com/sahancz/book-explorer.git
-```
-
-Open the project folder:
-
-```bash
 cd book-explorer
 ```
 
-Install the required dependencies:
+Install the dependencies and start the server:
 
 ```bash
 npm install
-```
-
-Start the server:
-
-```bash
 npm start
 ```
 
-Open the application in your browser:
+Open [http://localhost:3000](http://localhost:3000). The API is available at [http://localhost:3000/api/books](http://localhost:3000/api/books).
 
-```text
-http://localhost:3000
+The default database is `bookExplorerDB`, and Mongoose stores the documents in the `books` collection. Six sample books are inserted only when the collection is empty, preventing duplicates when the server restarts.
+
+To use another MongoDB connection or port:
+
+```bash
+MONGODB_URI="mongodb://127.0.0.1:27017/anotherDatabase" PORT=3001 npm start
 ```
 
-## REST API Endpoint
+## Verify the Database
 
-The application provides the following GET endpoint:
+With MongoDB running, use:
 
-```text
-http://localhost:3000/api/books
+```bash
+npm run db:check
 ```
-
-The endpoint returns the book information as JSON data.
 
 ## Project Structure
 
@@ -61,15 +57,13 @@ book-explorer/
 │   ├── index.html
 │   ├── scripts.js
 │   └── styles.css
+├── scripts/
+│   └── verify-database.js
 ├── server.js
 ├── package.json
 ├── package-lock.json
 └── README.md
 ```
-
-## GitHub Repository
-
-https://github.com/sahancz/book-explorer
 
 ## Author
 
