@@ -31,6 +31,16 @@ npm install
 npm start
 ```
 
+## Automated tests
+
+The project uses Mocha and Chai for automated testing, with Supertest for the
+Express API. The test suite covers successful and failed `GET /api/books`
+requests plus valid, invalid, default and edge-case reading-time calculations.
+
+```bash
+npm test
+```
+
 Open [http://localhost:3000](http://localhost:3000). The API is available at [http://localhost:3000/api/books](http://localhost:3000/api/books).
 
 The default database is `bookExplorerDB`, and Mongoose stores the documents in the `books` collection. Six sample books are inserted only when the collection is empty, preventing duplicates when the server restarts.

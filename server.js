@@ -2,12 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 
-const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI =
   process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/bookExplorerDB";
-
-app.use(express.static(path.join(__dirname, "public")));
 
 const bookSchema = new mongoose.Schema(
   {
@@ -75,24 +72,34 @@ async function seedDatabase() {
   }
 }
 
-app.get("/api/books", async (request, response) => {
-  try {
-    const books = await Book.find().sort({ _id: 1 }).lean();
+function createApp(bookModel = Book, logger = console) {
+  const app = express();
 
-    response.json({
-      statusCode: 200,
-      data: books,
-      message: "Books retrieved successfully from MongoDB",
-    });
-  } catch (error) {
-    console.error("Unable to retrieve books:", error);
-    response.status(500).json({
-      statusCode: 500,
-      data: [],
-      message: "Unable to retrieve books from MongoDB",
-    });
-  }
-});
+  app.use(express.static(path.join(__dirname, "public")));
+
+  app.get("/api/books", async (request, response) => {
+    try {
+      const books = await bookModel.find().sort({ _id: 1 }).lean();
+
+      response.json({
+        statusCode: 200,
+        data: books,
+        message: "Books retrieved successfully from MongoDB",
+      });
+    } catch (error) {
+      logger.error("Unable to retrieve books:", error);
+      response.status(500).json({
+        statusCode: 500,
+        data: [],
+        message: "Unable to retrieve books from MongoDB",
+      });
+    }
+  });
+
+  return app;
+}
+
+const app = createApp();
 
 async function startServer() {
   await mongoose.connect(MONGODB_URI);
@@ -105,7 +112,11 @@ async function startServer() {
   });
 }
 
-startServer().catch((error) => {
-  console.error("Unable to start Book Explorer:", error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  startServer().catch((error) => {
+    console.error("Unable to start Book Explorer:", error);
+    process.exitCode = 1;
+  });
+}
+
+module.exports = { app, createApp };
