@@ -1,6 +1,8 @@
 const express = require("express");
+const http = require("http");
 const mongoose = require("mongoose");
 const path = require("path");
+const { Server } = require("socket.io");
 
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI =
@@ -101,15 +103,121 @@ function createApp(bookModel = Book, logger = console) {
 
 const app = createApp();
 
+function cleanText(value, maximumLength) {
+  if (typeof value !== "string") {
+    return "";
+  }
+
+  return value.trim().slice(0, maximumLength);
+}
+
+function attachReadingRoom(httpServer, logger = console) {
+  const io = new Server(httpServer);
+
+  function broadcastReaderCount() {
+    io.emit("reader:count", { count: io.engine.clientsCount });
+  }
+
+  io.on("connection", (socket) => {
+    logger.log(`Reading Room connection: ${socket.id}`);
+    broadcastReaderCount();
+
+    socket.on("reader:join", (payload = {}, acknowledge = () => {}) => {
+      const name = cleanText(payload.name, 30);
+
+      if (!name) {
+        acknowledge({
+          ok: false,
+          message: "Please enter your name before joining.",
+        });
+        return;
+      }
+
+      socket.data.readerName = name;
+
+      io.emit("reader:activity", {
+        type: "joined",
+        name,
+        message: `${name} joined the Live Reading Room.`,
+        timestamp: new Date().toISOString(),
+      });
+
+      acknowledge({ ok: true, name });
+    });
+
+    socket.on("reading:update", (payload = {}, acknowledge = () => {}) => {
+      const name = socket.data.readerName;
+      const book = cleanText(payload.book, 80);
+      const progress = cleanText(payload.progress, 120);
+
+      if (!name) {
+        acknowledge({
+          ok: false,
+          message: "Join the reading room before sharing an update.",
+        });
+        return;
+      }
+
+      if (!book || !progress) {
+        acknowledge({
+          ok: false,
+          message: "Choose a book and enter a reading update.",
+        });
+        return;
+      }
+
+      const update = {
+        type: "reading-update",
+        name,
+        book,
+        progress,
+        message: `${name} is reading ${book}: ${progress}`,
+        timestamp: new Date().toISOString(),
+      };
+
+      io.emit("reading:update", update);
+      acknowledge({ ok: true });
+    });
+
+    socket.on("disconnect", () => {
+      const name = socket.data.readerName;
+
+      if (name) {
+        socket.broadcast.emit("reader:activity", {
+          type: "left",
+          name,
+          message: `${name} left the Live Reading Room.`,
+          timestamp: new Date().toISOString(),
+        });
+      }
+
+      logger.log(`Reading Room disconnection: ${socket.id}`);
+      broadcastReaderCount();
+    });
+  });
+
+  return io;
+}
+
 async function startServer() {
   await mongoose.connect(MONGODB_URI);
   console.log("Connected to MongoDB");
 
   await seedDatabase();
 
-  app.listen(PORT, () => {
-    console.log(`Book Explorer is running at http://localhost:${PORT}`);
+  const httpServer = http.createServer(app);
+  const io = attachReadingRoom(httpServer);
+
+  await new Promise((resolve, reject) => {
+    httpServer.once("error", reject);
+    httpServer.listen(PORT, () => {
+      console.log(`Book Explorer is running at http://localhost:${PORT}`);
+      console.log("Live Reading Room is ready for Socket.IO connections");
+      resolve();
+    });
   });
+
+  return { httpServer, io };
 }
 
 if (require.main === module) {
@@ -119,4 +227,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { app, createApp };
+module.exports = { app, attachReadingRoom, createApp, startServer };
