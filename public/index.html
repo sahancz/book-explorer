@@ -60,17 +60,122 @@
     </div>
 
     <div id="book-list" class="row"></div>
+
+    <section id="reading-room" class="reading-room-section">
+      <div class="reading-room-heading">
+        <div>
+          <p class="section-kicker">Socket.IO live feature</p>
+          <h4>Live Reading Room</h4>
+          <p>
+            Join other readers and share what you are reading in real time.
+          </p>
+        </div>
+
+        <div class="room-status" aria-live="polite">
+          <span id="connection-status" class="status-pill offline">
+            <span class="status-dot"></span>
+            Connecting...
+          </span>
+
+          <span class="reader-count-pill">
+            <i class="material-icons" aria-hidden="true">group</i>
+            <strong id="reader-count">0</strong>
+            online
+          </span>
+        </div>
+      </div>
+
+      <div class="row room-grid">
+        <div class="col s12 m5">
+          <div class="card-panel room-panel">
+            <h5>1. Join the room</h5>
+            <p class="room-help">
+              Choose a display name so readers can recognise your updates.
+            </p>
+
+            <form id="join-room-form">
+              <div class="input-field">
+                <i class="material-icons prefix" aria-hidden="true">person</i>
+                <input id="reader-name" type="text" maxlength="30" required>
+                <label for="reader-name">Display name</label>
+              </div>
+
+              <button id="join-room-button" class="btn waves-effect waves-light teal" type="submit">
+                Join room
+                <i class="material-icons right" aria-hidden="true">login</i>
+              </button>
+            </form>
+
+            <div id="joined-reader" class="joined-reader hide" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div class="col s12 m7">
+          <div class="card-panel room-panel">
+            <h5>2. Share a reading update</h5>
+            <p class="room-help">
+              Your update appears instantly for every connected reader.
+            </p>
+
+            <form id="reading-update-form">
+              <div class="input-field">
+                <select id="reading-book" class="browser-default" disabled required>
+                  <option value="" selected>Choose a book</option>
+                </select>
+              </div>
+
+              <div class="input-field">
+                <i class="material-icons prefix" aria-hidden="true">edit_note</i>
+                <input
+                  id="reading-progress"
+                  type="text"
+                  maxlength="120"
+                  placeholder="For example: Chapter 4 - the mystery is building"
+                  disabled
+                  required
+                >
+                <label for="reading-progress" class="active">Reading update</label>
+              </div>
+
+              <button id="share-update-button" class="btn waves-effect waves-light teal" type="submit" disabled>
+                Share update
+                <i class="material-icons right" aria-hidden="true">send</i>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="col s12">
+          <div class="card-panel activity-panel">
+            <div class="activity-heading">
+              <div>
+                <h5>Live activity</h5>
+                <p>Updates appear here without refreshing the page.</p>
+              </div>
+              <i class="material-icons pulse-icon" aria-hidden="true">sensors</i>
+            </div>
+
+            <ul id="activity-feed" class="collection activity-feed" aria-live="polite">
+              <li class="collection-item empty-activity">
+                Waiting for readers to share an update...
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="page-footer teal">
     <div class="footer-copyright">
       <div class="container center-align">
-        Book Explorer — SIT725 Task 4.2P
+        Book Explorer — SIT725 Task 7.3P
       </div>
     </div>
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
   <script src="scripts.js"></script>
 </body>
 </html>

@@ -100,6 +100,204 @@ nav .brand-logo i {
   font-weight: 600;
 }
 
+.reading-room-section {
+  margin-top: 45px;
+  padding-top: 35px;
+  border-top: 1px solid #dfe5e8;
+}
+
+.reading-room-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 22px;
+}
+
+.reading-room-heading h4 {
+  margin: 4px 0 8px;
+  font-weight: 600;
+}
+
+.reading-room-heading > div > p:last-child {
+  margin: 0;
+  color: #546e7a;
+  font-size: 1.05rem;
+}
+
+.section-kicker {
+  margin: 0;
+  color: #00796b;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.room-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.status-pill,
+.reader-count-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 7px 13px;
+  border-radius: 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.status-pill {
+  background: #eceff1;
+  color: #546e7a;
+}
+
+.status-pill.online {
+  background: #e0f2f1;
+  color: #00695c;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: #90a4ae;
+}
+
+.status-pill.online .status-dot {
+  background: #00897b;
+  box-shadow: 0 0 0 4px rgba(0, 137, 123, 0.12);
+}
+
+.reader-count-pill {
+  background: #263238;
+  color: white;
+}
+
+.reader-count-pill i {
+  margin-right: 7px;
+  font-size: 1.15rem;
+}
+
+.reader-count-pill strong {
+  margin-right: 4px;
+  color: #80cbc4;
+}
+
+.room-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.room-grid > .col {
+  display: flex;
+}
+
+.room-panel,
+.activity-panel {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(38, 50, 56, 0.09);
+}
+
+.room-panel h5,
+.activity-panel h5 {
+  margin-top: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.room-help,
+.activity-heading p {
+  color: #607d8b;
+}
+
+.room-panel .btn {
+  margin-top: 6px;
+}
+
+.room-panel .btn:disabled {
+  color: #90a4ae !important;
+}
+
+.joined-reader {
+  margin-top: 18px;
+  padding: 10px 12px;
+  border-left: 4px solid #009688;
+  background: #e0f2f1;
+  color: #00695c;
+  font-weight: 600;
+}
+
+#reading-book {
+  height: 48px;
+  margin: 10px 0 16px;
+  padding: 0 10px;
+  border: 1px solid #b0bec5;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.activity-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.activity-heading p {
+  margin-bottom: 0;
+}
+
+.pulse-icon {
+  color: #009688;
+  font-size: 2.2rem;
+}
+
+.activity-feed {
+  margin: 22px 0 0;
+  border-color: #e1e7ea;
+  border-radius: 6px;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.activity-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 50%;
+  background: #e0f2f1;
+  color: #00796b;
+  font-size: 1.2rem;
+}
+
+.activity-content p {
+  margin: 0 0 3px;
+}
+
+.activity-content time {
+  color: #78909c;
+  font-size: 0.82rem;
+}
+
+.empty-activity {
+  color: #78909c;
+  font-style: italic;
+}
+
 .page-footer {
   padding-top: 0;
 }
@@ -119,5 +317,20 @@ nav .brand-logo i {
 
   .book-card .card-image {
     height: 420px;
+  }
+
+  .reading-room-heading,
+  .room-status {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .room-status {
+    width: 100%;
+  }
+
+  .status-pill,
+  .reader-count-pill {
+    justify-content: center;
   }
 }
